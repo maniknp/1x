@@ -11,177 +11,240 @@
  * License URI: https://opensource.org/licenses/MIT
  */
 
- #define constant for current plugin dir
- define('JWTPBM_PLUGIN_DIR', __DIR__);
+
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 
-# function to  cache a page on first time load on frontend once page loads, then it will  store page data on static file and after that serer page from that static file.
-function cache_page_on_first_load() {
-    if (!is_admin()) {
-        $page_url = $_SERVER['REQUEST_URI'];
-        $cache_file = get_home_path() . '/cache1/' . md5($page_url) . '.html';
-        if (!file_exists($cache_file)) {
-            ob_start();
-            get_header();
-            the_content();
-            get_footer();
-            $output = ob_get_contents();
-            file_put_contents($cache_file, $output);
-            ob_end_clean();
-            echo $output;
-            exit;
-            // ob_end_clean();
-        }
 
-        if (file_exists($cache_file)) {
-            readfile($cache_file);
-            exit;
-        }
-    }
-}
-// add_action('template_redirect', 'cache_page_on_first_load',1);
+define('JWTPBM_PLUGIN_DIR', __DIR__);
+define('JWTPBM_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('JWTPBM_PLUGIN_BASENAME', plugin_basename(__FILE__));
+define('JWTPBM_PLUGIN_VERSION', '1.0.0');
 
-
-# function for optimize database for fast query
-function optimize_database() {
-    global $wpdb;
-    $wpdb->query("OPTIMIZE TABLE wp_posts, wp_postmeta, wp_comments, wp_commentmeta, wp_users, wp_options, wp_term_relationships, wp_term_taxonomy, wp_terms");
-}
-// add_action('wp_footer', 'optimize_database');
+register_activation_hook(__FILE__, 'activate_jwtpbm_webhooks');
+register_deactivation_hook(__FILE__, 'deactivate_jwtpbm_webhooks');
 
 
 /**
- * The function optimize_db_query_response() is a function that optimizes the database query response time. It does this by setting the global variable max_allowed_packet to 1073741824. This variable controls the maximum size of a packet that can be sent or received by the MySQL server. By setting it to a higher value, the function allows the MySQL server to send and receive larger packets, which can improve the performance of database queries.
- * @return void
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-jwtpbm-activator.php
  */
-function optimize_db_query_response() {
-    global $wpdb;
-    $wpdb->query("SET GLOBAL max_allowed_packet=1073741824");
-}
-// add_action('wp_footer', 'optimize_db_query_response');
-
-
-
-# function to save db query result in db for when same query occars then it will return from saved db query result.
-function save_db_query_result() {
-    global $wpdb;
-    $query = $wpdb->last_query;
-    $result = $wpdb->get_results($query);
-    $query_hash = md5($query);
-    $wpdb->query("INSERT INTO wp_db_query_results (query_hash, result) VALUES ('$query_hash', '$result')");
-}
-// add_action('wp_footer', 'save_db_query_result');
-
-
-# function to check if same query before `query execution use hook `
-// function check_same_query() {
-//     global $wpdb;
-//     $query = $wpdb->last_query;
-//     $query_hash = md5($query);
-//     $result = $wpdb->get_results("SELECT * FROM wp_db_query_results WHERE query_hash = '$query_hash'");
-//     if ($result) {
-//         return $result;
-//     } else {
-//         return false;
-//     }
-// }
-
-
-## list of db query filter hooks
-// add_filter('pre_query', 'check_same_query');
-// add_filter('wp_footer', 'save_db_query_result');
-// add_filter('wp_footer', 'optimize_db_query_response');
-// add_filter('wp_footer', 'optimize_database');
-// add_filter('template_redirect', 'cache_page_on_first_load');
-
-
-
-function check_same_query_posts_pre_query($posts, $query) {
-    #check is admin or has plugin update capability then return
-    // if (is_admin() || current_user_can('update_plugins')) {
-    //     return $posts;
-    // }
-
-    $post_data = $posts;
-    $wpdbQuery_instance = $query;
-    $query = $wpdbQuery_instance->query;
-    #check query in db
-    if ($query) {
-        $query_hash = md5($query);
-        $result = $wpdbQuery_instance->get_results("SELECT * FROM wp_db_query_results WHERE query_hash = '$query_hash'");
-        if ($result) {
-            $post_data = $result;
-        }
-    }
-    return [$post_data, $wpdbQuery_instance];
+function activate_jwtpbm_webhooks() {
+    require_once plugin_dir_path(__FILE__) . 'includes/class-jwtpbm-activator.php';
+    JWTPBM_Activator::activate();
 }
 
 
-# list of plugin_loaded hooks
-// add_action( 'muplugins_loaded', 'check_same_query_init' );
-function check_same_query_init() {
-    add_filter('posts_pre_query', 'check_same_query_posts_pre_query' . 10, 2);
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-jwtpbm-deactivator.php
+ */
+function deactivate_jwtpbm_webhooks() {
+    require_once plugin_dir_path(__FILE__) . 'includes/class-jwtpbm-deactivator.php';
+    JWTPBM_Deactivator::deactivate();
 }
 
 
-
-
-# function for optimize database for fast query
-add_action('wp_footer', 'wp_foot_js_loaded');
-function wp_foot_js_loaded() {
-?>
-    <script>
-        jQuery(document).ready(function($) {
-            // `qsm_before_display_result`
-            jQuery(document).on('qsm_before_display_result', function(e, results, quiz_form_id, container) {
-                debugger;
-            });
-
-        });
-    </script>
-<?php
-}
-
-# creating cron run every 15 minutes and update up_option table key name `my_test_cron_key` 
-// if (!wp_next_scheduled('my_test_cron_key')) {
-//     wp_schedule_event(time(), 15, 'my_test_cron_key');
-
-//     function my_test_cron_function() {
-
-        
-//         update_option('my_test_cron_key', );
-
-//     }
-// }
-
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	include 'wp-cli.php';
-}
-
-function is_request_to_rest_api_by_1x() {
-    if ( empty( $_SERVER['REQUEST_URI'] ) ) {
-        return false;
-    }
-
-    $rest_prefix = trailingslashit( rest_get_url_prefix() );
-    $request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-
-    // Check if the request is to the WC API endpoints.
-    $woocommerce = ( false !== strpos( $request_uri, $rest_prefix . 'wc/' ) );
-    return $woocommerce;
-}
-
-
-add_filter( 'determine_current_user','authenticate_by_1x',10 );
-function authenticate_by_1x($user_id ) {
-    if ( !is_request_to_rest_api_by_1x() ) {
-        return $user_id ;
-    }
-    
-    return 1382;
-    // echo "Done";
+if (defined('WP_CLI') && WP_CLI) {
+    include_once JWTPBM_PLUGIN_DIR . '/cli/index.php';
 }
 
 /** included api file **/
+include JWTPBM_PLUGIN_DIR . '/api/index.php';
 
-include JWTPBM_PLUGIN_DIR.'/api/index.php';
+/** included hooks file **/
+include_once JWTPBM_PLUGIN_DIR . '/hooks/index.php';
+
+/** included cron file **/
+include_once JWTPBM_PLUGIN_DIR . '/cron/index.php';
+
+add_action('admin_menu', 'custom_menu_page_2');
+
+function custom_menu_page_2() {
+    add_menu_page(
+        'Sortable Menu', // Page title
+        'Sortable Menu', // Menu title
+        'manage_options', // Capability
+        'sortable-menu', // Menu slug
+        'sortable_menu_page', // Callback function
+        'dashicons-menu', // Icon
+        30 // Position
+    );
+}
+
+function sortable_menu_page() {
+    $cat_data_arr = [];
+    $args = array(
+        'taxonomy' => 'product_cat',
+        // 'orderby'  => 'include',
+        //'include'  => $term_ids,
+        'hide_empty' => false
+    );
+
+    $product_categories = get_terms($args);
+    foreach ($product_categories as $category) {
+        $category->name = str_replace('&amp;', '&', $category->name);
+        $cat_data_arr[] = ['id' => $category->term_id, 'text' => $category->name];
+    }
+
+
+
+?>
+    <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script> -->
+
+
+    <select id="mySelect" style="width: 300px;">
+        <option value="">Select an option...</option>
+    </select>
+    <!-- <div class="wrap">
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+            </ol>
+        </div>
+    </div> -->
+
+    <!-- <div class="wrap">
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="1">
+                    <div class="dd-handle">Item 1</div>
+                </li>
+                <li class="dd-item" data-id="2">
+                    <div class="dd-handle">Item 2</div>
+                </li>
+                <li class="dd-item" data-id="3">
+                    <div class="dd-handle">Item 3</div>
+                    <ol class="dd-list">
+                        <li class="dd-item" data-id="4">
+                            <div class="dd-handle">Sub Item 1</div>
+                        </li>
+                        <li class="dd-item" data-id="5">
+                            <div class="dd-handle">Sub Item 2</div>
+                        </li>
+                    </ol>
+                </li>
+                <li class="dd-item" data-id="6">
+                    <div class="dd-handle">Item 4</div>
+                </li>
+            </ol>
+        </div>
+    </div> -->
+
+
+    <div class="dd" id="nestable">
+        <ol class="dd-list">
+            <li class="dd-item" data-id="1">
+                <div class="dd-handle">
+                    <label> <span class="item_name">Item 1</span> <button class="item-edit">Edit</button></label>
+                    <div class="content">
+                        <p>Content 1</p>
+                    </div>
+                </div>
+            </li>
+            <li class="dd-item" data-id="2">
+                <div class="dd-handle">
+                    <label> <span class="item_name">Item 2</span> <button class="item-edit">Edit</button></label>
+                    <div class="content">
+                        <p>Content 2</p>
+                    </div>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+
+
+
+
+    <script>
+        //   $( "#accordion" ).accordion({
+        //   collapsible: true
+        // });
+
+        <?php echo "var cat_data_arr = " . json_encode($cat_data_arr) . ";"; ?>
+
+        function insertcateory(parent, data) {
+            parent.find('.dd-list').append(`<li class="dd-item" data-id="${data.id}"><div class="dd-handle"> ${data.text}</div></li>`);
+        }
+        (function($) {
+            $(document).ready(function() {
+                var nestable = $('#nestable').nestable();
+
+                $('#mySelect').select2({
+                    data: cat_data_arr
+                });
+
+                $('#mySelect').on('select2:select', function(e) {
+                    let id = e.params.data.id;
+                    let text = e.params.data.text;
+                    insertcateory($('#nestable'), {
+                        id: id,
+                        text: text
+                    })
+                });
+
+                $('#nestable').on('click', '.dd-handle .item-edit', function() {
+                    $(this).closest('.dd-handle').toggleClass('height-auto');
+                });
+
+                // used to get the serialized data
+                // window.JSON.stringify($('#nestable').nestable().nestable('serialize'))
+
+            
+            });
+
+        })(jQuery);
+    </script>
+
+    <style>
+        .content {
+            display: none;
+        }
+
+        .dd-handle.height-auto .content {
+            display: block;
+        }
+
+        .dd-handle label {
+            width: 100%;
+            display: block;
+        }
+
+        .dd-handle .item-edit {
+            background: deepskyblue;
+            width: 40px;
+            display: inline-block;
+            text-align: center;
+            color: #000;
+            padding: 0px 0px;
+        }
+
+        .dd-handle span.item_name {
+            display: inline-block;
+            width: calc(99.4% - 40px);
+        }
+
+        .height-auto {
+            height: auto;
+        }
+
+        .display-none {
+            display: none;
+        }
+    </style>
+
+<?php
+}
+
+// Save menu order
+add_action('wp_ajax_save_menu_order', 'save_menu_order_callback');
+
+function save_menu_order_callback() {
+    if (isset($_POST['order'])) {
+        $order = $_POST['order'];
+    }
+    wp_die(); // Always include this line to end AJAX requests properly
+}

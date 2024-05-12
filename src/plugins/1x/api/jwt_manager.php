@@ -3,6 +3,7 @@
 include_once JWTPBM_PLUGIN_DIR . '/api/jwt/vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class JWTPBM_JWTManager
 {
@@ -11,6 +12,7 @@ class JWTPBM_JWTManager
     public static $token_issuer = 'im_token_issuer';
     public static $token_audience = 'customer';
     public static $refreshTokenExpiryInMinutes = (60 * 60 * 24);    // 24 hours 
+    // public static $refreshTokenExpiryInMinutes = (120);    // 1 Minute
     public static $tokenExpiryInSeconds = 60 * 60; // 1 hour
 
     public function __construct()
@@ -97,11 +99,48 @@ class JWTPBM_JWTManager
 
     public static function isRefreshTokenExists($token) {
         global $wpdb;
+        self::deleteExpiredRefreshToken(); 
         $table_name = $wpdb->prefix . JWTPBM_DbTables::$tbl_refresh_tokens;
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $table_name WHERE token = %s", $token);
-        $count = $wpdb->get_var($sql);
-        return $count > 0;
+        $sql = $wpdb->prepare("SELECT user_id FROM $table_name WHERE token = %s", $token);
+        $user_id = $wpdb->get_var($sql);
+        return is_null($user_id) ? false : (int) $user_id;
     }
 
-    
+    public static function generateAccessToken($user_id) 
+    {
+        $response_A = ['status' => 0, 'data' => array(), 'message' => ""];
+
+        try {
+
+            self::deleteExpiredRefreshToken();  //clear old refresh token
+            $payload = [
+                "iss" => self::$token_issuer,
+                "aud" => self::$token_audience,
+                "iat" => time(), // Issued at
+                "exp" => time() + self::$tokenExpiryInSeconds,
+                "sub" => $user_id
+            ];
+
+            $secret_key =  self::$secret_key;
+            $jwt = JWT::encode($payload, $secret_key, 'HS256');
+            $token = base64_encode($jwt);
+
+            $response_A = ['status' => 1,'token' => $token];
+
+        } catch (\Exception $e) {
+            $response_A['message'] = $e->getMessage();
+        }
+
+        // update_user_meta($user_id, 'jwt_pbm_login_token', $token);
+        return $response_A;
+    }
+
+    public static function decode_token($token)
+    {   
+        $jwt = base64_decode($token);
+        $secret_key =  self::$secret_key;
+        $decoded = JWT::decode($jwt, new Key($secret_key, 'HS256'));
+        return $decoded;
+    }
+
 }
