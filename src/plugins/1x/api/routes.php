@@ -1,4 +1,3 @@
-
 <?php
 
 function permission_callback_JWTPBM($request) {

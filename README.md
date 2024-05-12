@@ -2,3 +2,4 @@
 ```bash
 $ docker exec wpcli wp 
 ```
+
