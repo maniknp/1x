@@ -57,6 +57,7 @@ function my_custom_cron_function() {
 /** =============  Run cron job once =============  */
 
 add_action( 'custom_single_cron_job_hook', 'custom_single_cron_job_function' );
-function custom_single_cron_job_function() {
+function custom_single_cron_job_function()
+ {
 	// Your code here
 }
