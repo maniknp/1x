@@ -9,7 +9,8 @@
     
     <!-- Specify the files or directories to be checked -->
     <file>./</file>
-    
+    <include-pattern>*.php</include-pattern>
+
     <!-- Exclude specific directories or files from checking -->
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>node_modules/*</exclude-pattern>
