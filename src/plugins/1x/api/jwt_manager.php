@@ -7,6 +7,7 @@ use Firebase\JWT\Key;
 
 class JWTPBM_JWTManager {
 
+
 	public static $secret_key                  = 'my_secret_key';
 	public static $token_issuer                = 'im_token_issuer';
 	public static $token_audience              = 'customer';
@@ -34,6 +35,7 @@ class JWTPBM_JWTManager {
 		);
 
 		try {
+
 			self::deleteExpiredRefreshToken();  // clear old refresh token
 			$refreshToken            = self::generateSecureToken();
 			$refreshTokenExpiry_unix = strtotime( date( 'Y-m-d H:i:s', ( strtotime( 'now' ) + self::$refreshTokenExpiryInMinutes ) ) ); // Unix timestamp
@@ -114,6 +116,7 @@ class JWTPBM_JWTManager {
 		);
 
 		try {
+
 			self::deleteExpiredRefreshToken();  // clear old refresh token
 			$payload = array(
 				'iss' => self::$token_issuer,
@@ -131,6 +134,7 @@ class JWTPBM_JWTManager {
 				'status' => 1,
 				'token'  => $token,
 			);
+
 		} catch ( \Exception $e ) {
 			$response_A['message'] = $e->getMessage();
 		}

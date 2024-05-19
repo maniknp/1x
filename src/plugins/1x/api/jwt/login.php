@@ -1,5 +1,4 @@
 <?php
-
 require 'vendor/autoload.php';
 
 
@@ -12,6 +11,7 @@ $pdo         = $db['pdo'];
 $status_code = 500;
 
 try {
+
 	if ( ! $db['status'] ) {
 		$status_code = 502;
 		throw new \Exception( 'Error connecting to database' );
@@ -40,6 +40,7 @@ try {
 
 	$pass_status = password_verify( trim( $password ), password_hash( trim( $user['password'] ), PASSWORD_BCRYPT ) );
 	if ( $user && $pass_status ) {
+
 		$userId                  = (int) $user['id'];
 		$refreshToken            = generateSecureToken();
 		$refreshTokenExpiry      = date( 'Y-m-d H:i:s', ( strtotime( 'now' ) + 60 * 5 ) );   // Refresh token expires after  5 minutes

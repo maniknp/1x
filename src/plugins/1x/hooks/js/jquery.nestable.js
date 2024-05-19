@@ -92,7 +92,7 @@
 					return;
 				}
 
-				debugger;
+				// debugger;
 
 				var handle = $( e.target );
 				if ( ! handle.hasClass( list.options.handleClass )) {

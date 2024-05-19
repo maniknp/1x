@@ -19,6 +19,8 @@ $response['status']  = 0;
 $response['message'] = 'Please Provide us message';
 $http_response_code  = 401;
 try {
+
+
 	if ( ! isset( $headers['Authorization'] ) ) {
 		$http_response_code = 400;
 		throw new Exception( 'Authorization header does not exists' );

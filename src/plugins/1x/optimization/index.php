@@ -1,5 +1,6 @@
 <?php
 
+
 // function to  cache a page on first time load on frontend once page loads, then it will  store page data on static file and after that serer page from that static file.
 function cache_page_on_first_load() {
 	if ( ! is_admin() ) {

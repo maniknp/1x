@@ -128,6 +128,7 @@ function verify_bearer_authorization_header_JWTPBM() {
 	$response['status']  = 0;
 	$response['message'] = 'Please Provide us message';
 	try {
+
 		if ( ! isset( $headers['Authorization'] ) ) {
 			throw new Exception( 'Authorization header does not exists', 400 );
 		}

@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template Name: Dashboard
+ * @package dashboard
+ * @since dashboard 1.0
+ */
+
+?>
 <?php get_header(); ?>
 
 <div class="row row-large">

@@ -1,5 +1,14 @@
 <?php
+/**
+ * @package Dashboard
+ * @version 1.0
+ */
+
 add_action( 'admin_menu', 'jwtpbm_add_admin_menu' );
+/**
+ * Add a menu page
+ * @return void
+ */
 function jwtpbm_add_admin_menu() {
 	add_menu_page(
 		'Page title 1',
@@ -10,8 +19,23 @@ function jwtpbm_add_admin_menu() {
 		'dashicons-admin-generic',
 		6
 	);
+
+	add_menu_page(
+		'Page title 2',
+		'Menu Title 2',
+		'manage_options',
+		'page-title-slug-2',
+		'page_title_slug_2_page_content',
+		'dashicons-admin-generic',
+		6
+	);
 }
 
+
+/**
+ * Page title 1 content
+ * @return void
+ */
 function page_title_slug_1_page_content() {
 	?>
 	<div class="wrap"><h1> <?php echo get_admin_page_title(); ?></div> 
@@ -20,7 +44,7 @@ function page_title_slug_1_page_content() {
 
 			<?php
 			if ( isset( $_POST['custom_shop_page_cats'] ) ) {
-				$custom_shop_page_cats = trim( $_POST['custom_shop_page_cats'] ) == '' ? '' : trim( $_POST['custom_shop_page_cats'] );
+				$custom_shop_page_cats = trim( $_POST['custom_shop_page_cats'] ) === '' ? '' : trim( $_POST['custom_shop_page_cats'] );
 				update_option( 'custom_shop_page_cats', $custom_shop_page_cats, false );
 				echo "<div class='notice notice-success is-dismissible'><p>Category updated Successfuly</p></div>";
 			}
@@ -47,7 +71,7 @@ function page_title_slug_1_page_content() {
 				$text_JS_all_product_cat_array[ $category_id ] = $category_name;
 			}
 			$select2_html            .= ' </select>';
-			$text_JS_all_product_cats = ' var all_product_cats = ' . json_encode( $text_JS_all_product_cat_array ) . ';';
+			$text_JS_all_product_cats = ' var all_product_cats = ' . wp_json_encode( $text_JS_all_product_cat_array ) . ';';
 
 			?>
 
@@ -69,14 +93,14 @@ function page_title_slug_1_page_content() {
 					<ul id="sortable-categories">
 						<?php
 						$custom_campaign_selected_pages = get_option( 'custom_shop_page_cats', '' );
-						if ( empty( $custom_campaign_selected_pages ) || is_null( $custom_campaign_selected_pages ) || trim( $custom_campaign_selected_pages ) == '' ) {
-							$custom_campaign_selected_pages = '';
+						if ( empty( $custom_campaign_selected_pages ) || is_null( $custom_campaign_selected_pages ) || trim( $custom_campaign_selected_pages ) === '' ) {
+							$custom_campaign_selected_pages === '';
 						} else {
 							$term_ids = explode( ',', $custom_campaign_selected_pages );
 						}
 
 						// $term_ids = array(477, 441);
-						if ( $custom_campaign_selected_pages != '' ) {
+						if ( $custom_campaign_selected_pages !== '' ) {
 							$args = array(
 								'taxonomy'   => 'product_cat',
 								'orderby'    => 'include',
@@ -85,7 +109,7 @@ function page_title_slug_1_page_content() {
 							);
 
 							$product_categories = get_terms( $args );
-							// Loop through the product categories
+							// Loop through the product categories.
 							foreach ( $product_categories as $category ) {
 								$category_id   = $category->term_id;
 								$category_name = $category->name;
@@ -187,4 +211,12 @@ function page_title_slug_1_page_content() {
 
 	</div>
 	<?php
+}
+
+
+/*
+	Page Content 2
+*/
+function page_title_slug_2_page_content() {
+	echo '<div id="1x-root"></div>';
 }

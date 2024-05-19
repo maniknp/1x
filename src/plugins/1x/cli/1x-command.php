@@ -19,6 +19,8 @@ if ( ! class_exists( 'WP_CLI_1x_Command' ) ) {
 	 */
 	class WP_CLI_1x_Command extends WP_CLI_Command {
 
+
+
 		public function __construct() {
 			// $this->varnish_purge = new VarnishPurger();
 		}

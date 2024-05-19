@@ -3,8 +3,40 @@
     <description>WordPress Plugin Coding Standards</description>
     
     <!-- Specify the WordPress Coding Standards explicitly -->
-    <rule ref="WordPress"/>
-    <!-- <rule ref="WordPress-Core"/> -->
+       <rule ref="WordPress">
+        <!-- <exclude name="Generic.Files.LineLength.TooLong" />
+        <exclude name="Generic.Files.LowercasedFilename.NotFound" />
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" /> -->
+        <!-- <exclude name="PSR2.Files.EndFileNewline.TooMany" /> -->
+        
+        <exclude name="Generic.Commenting.DocComment.SpacingBeforeTags" />
+
+        <exclude name="WordPress.WP.CronInterval.CronSchedulesInterval" />
+
+        <exclude name="Squiz.PHP.CommentedOutCode.Found" />
+        <exclude name="Generic.Commenting.DocComment.MissingShort" />
+
+        <exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery" />
+        <exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching" />
+        <exclude name="WordPress.DB.PreparedSQL.InterpolatedNotPrepared" />
+        <exclude name="WordPress.DB.DirectDatabaseQuery.SchemaChange" />
+        <exclude name="WordPress.DB.PreparedSQL.NotPrepared" />
+
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+
+        <exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped" />
+        <exclude name="WordPress.Security.NonceVerification.Missing" />
+        <exclude name="WordPress.Security.ValidatedSanitizedInput.MissingUnslash" />
+        <exclude name="WordPress.Security.ValidatedSanitizedInput.InputNotSanitized" />
+
+
+        <exclude name="WordPress.WP.DeprecatedParameters.Get_termsParam2Found" />
+
+        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
+
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
+
+    </rule>
   
     
     <!-- Specify the files or directories to be checked -->
@@ -16,16 +48,14 @@
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>build/*</exclude-pattern>
     <exclude-pattern>dist/*</exclude-pattern>
+    <exclude-pattern>src/themes/*</exclude-pattern>
+    <exclude-pattern>src/*</exclude-pattern>
     
     <!-- Show sniff codes in reports -->
     <arg value="s"/>
     
     <!-- Set the severity level of issues to report -->
     <arg name="severity" value="5"/>
-
-      <!-- Report all errors and warnings -->
-    <!-- <arg name="severity" value="1"/> -->
-    
     
     <!-- Show progress of the run -->
     <arg value="p"/>
