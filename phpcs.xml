@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Plugin Coding Standards">
-    <description>WordPress Plugin Coding Standards</description>
-    
+<ruleset name="WordPress Plugin Coding Standards with PHP Compatibility">
+    <description>WordPress Plugin Coding Standards with PHP Compatibility Checks</description>
+
+    <!-- Specify the PHPCompatibility Coding Standards -->
+    <rule ref="PHPCompatibility"/>
+
     <!-- Specify the WordPress Coding Standards explicitly -->
        <rule ref="WordPress">
         <!-- <exclude name="Generic.Files.LineLength.TooLong" />
@@ -41,7 +44,10 @@
     
     <!-- Specify the files or directories to be checked -->
     <file>./</file>
+
+    <!-- Include only PHP files -->
     <include-pattern>*.php</include-pattern>
+    <include-pattern>**/*.php</include-pattern>
 
     <!-- Exclude specific directories or files from checking -->
     <exclude-pattern>vendor/*</exclude-pattern>
@@ -59,7 +65,11 @@
     
     <!-- Show progress of the run -->
     <arg value="p"/>
-    
+
     <!-- Set the encoding of the files to be checked -->
     <arg name="encoding" value="utf-8"/>
+
+    <!-- Specify PHP versions to check for compatibility -->
+    <config name="testVersion" value="5.6-8.0"/>
+
 </ruleset>
