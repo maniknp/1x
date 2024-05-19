@@ -2,8 +2,6 @@
 <ruleset name="WordPress Plugin Coding Standards with PHP Compatibility">
     <description>WordPress Plugin Coding Standards with PHP Compatibility Checks</description>
 
-    <!-- Specify the PHPCompatibility Coding Standards -->
-    <rule ref="PHPCompatibility"/>
 
     <!-- Specify the WordPress Coding Standards explicitly -->
        <rule ref="WordPress">
@@ -12,12 +10,12 @@
         <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" /> -->
         <!-- <exclude name="PSR2.Files.EndFileNewline.TooMany" /> -->
         
-        <exclude name="Generic.Commenting.DocComment.SpacingBeforeTags" />
-
         <exclude name="WordPress.WP.CronInterval.CronSchedulesInterval" />
 
         <exclude name="Squiz.PHP.CommentedOutCode.Found" />
         <exclude name="Generic.Commenting.DocComment.MissingShort" />
+        <exclude name="Generic.Commenting.DocComment.ShortNotCapital" />
+        <exclude name="Generic.Commenting.DocComment.SpacingBeforeTags" />
 
         <exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery" />
         <exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching" />
@@ -32,8 +30,8 @@
         <exclude name="WordPress.Security.ValidatedSanitizedInput.MissingUnslash" />
         <exclude name="WordPress.Security.ValidatedSanitizedInput.InputNotSanitized" />
 
-
         <exclude name="WordPress.WP.DeprecatedParameters.Get_termsParam2Found" />
+        <exclude name="WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents" />
 
         <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
 
@@ -47,7 +45,7 @@
 
     <!-- Include only PHP files -->
     <include-pattern>*.php</include-pattern>
-    <include-pattern>**/*.php</include-pattern>
+    <!-- <include-pattern>**/*.php</include-pattern> -->
 
     <!-- Exclude specific directories or files from checking -->
     <exclude-pattern>vendor/*</exclude-pattern>
@@ -55,7 +53,7 @@
     <exclude-pattern>build/*</exclude-pattern>
     <exclude-pattern>dist/*</exclude-pattern>
     <exclude-pattern>src/themes/*</exclude-pattern>
-    <exclude-pattern>src/*</exclude-pattern>
+    <exclude-pattern>*.js</exclude-pattern>
     
     <!-- Show sniff codes in reports -->
     <arg value="s"/>

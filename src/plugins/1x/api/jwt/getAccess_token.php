@@ -1,4 +1,5 @@
 <?php
+
 require 'vendor/autoload.php';
 $db = require_once './db.php';
 require_once './token_functionality.php';

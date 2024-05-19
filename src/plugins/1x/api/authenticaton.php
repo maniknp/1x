@@ -172,9 +172,10 @@ function is_request_to_rest_api_jwtpbm() {
 	$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
 	// Check if the request is to the WC API endpoints.
-	$woocommerce = ( false !== strpos( $request_uri, $rest_prefix . 'wc/' ) ||
+	$woocommerce = (
+		false !== strpos( $request_uri, $rest_prefix . 'wc/' ) ||
 					false !== strpos( $request_uri, $rest_prefix . 'jwtpbm/' )
-					);
+	);
 	return $woocommerce;
 }
 

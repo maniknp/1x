@@ -7,5 +7,5 @@ function jwtpbm_admin_footer() {
 
 add_action( 'wp_footer', 'jwtpbm_wp_footer' );
 function jwtpbm_wp_footer() {
-		// echo "wp_footer_test";
+	// echo "wp_footer_test";
 }

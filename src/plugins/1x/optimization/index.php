@@ -1,10 +1,16 @@
 <?php
+/**
+ * @package 1x
+ */
 
-
-// function to  cache a page on first time load on frontend once page loads, then it will  store page data on static file and after that serer page from that static file.
+/**
+ * Function to  cache a page on first time load on frontend once page loads, then it will  store page data on static file and after that serer page from that static file.
+ *
+ * @return void
+ */
 function cache_page_on_first_load() {
 	if ( ! is_admin() ) {
-		$page_url   = $_SERVER['REQUEST_URI'];
+		$page_url   = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 		$cache_file = get_home_path() . '/cache1/' . md5( $page_url ) . '.html';
 		if ( ! file_exists( $cache_file ) ) {
 			ob_start();

@@ -1,6 +1,7 @@
 <?php
 
 class JWTPBM_DbTables {
+
 	public static $tbl_refresh_tokens = 'refresh_tokens';
 
 

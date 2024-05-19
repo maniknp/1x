@@ -21,5 +21,8 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "require": {
+        "friendsofphp/php-cs-fixer": "^3.57"
     }
 }

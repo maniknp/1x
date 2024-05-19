@@ -7,7 +7,6 @@ use Firebase\JWT\Key;
 
 class JWTPBM_JWTManager {
 
-
 	public static $secret_key                  = 'my_secret_key';
 	public static $token_issuer                = 'im_token_issuer';
 	public static $token_audience              = 'customer';
