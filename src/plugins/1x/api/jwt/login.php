@@ -81,4 +81,4 @@ try {
 
 header( 'Content-Type: application/json' );
 http_response_code( $status_code );
-echo json_encode( $response_A );
+echo wp_json_encode( $response_A );
