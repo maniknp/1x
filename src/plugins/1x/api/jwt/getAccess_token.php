@@ -15,7 +15,7 @@ $response_A = array(
 use Firebase\JWT\JWT;
 
 try {
-	if ( ! isset( $_POST['refresh_token'] ) || trim( $_POST['refresh_token'] ) == '' ) {
+	if ( ! isset( $_POST['refresh_token'] ) || trim( $_POST['refresh_token'] ) === '' ) {
 		$status_code = 400;
 		throw new \Exception( 'Refresh token is required' );
 	}
@@ -51,4 +51,4 @@ try {
 
 header( 'Content-Type: application/json' );
 http_response_code( $status_code );
-echo json_encode( $response_A );
+echo wp_json_encode( $response_A );
