@@ -2,7 +2,7 @@
 /**
  * This file contains the definition of the sample_function.
  *
- * @package root
+ * @package root 
  * @version 1.0
  */
 
